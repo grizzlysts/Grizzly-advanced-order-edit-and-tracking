@@ -1,0 +1,49 @@
+<?php $order_id = $_POST['entity_id']; 
+
+ $model = Mage::getModel("sales/order")->load($order_id);
+$model['status'];
+?>
+<Style>
+.order_status select.select {width:150px !important;}
+div.buttoncontainer {
+    margin: 10px 0px;
+    float: left;
+}
+div.savebutton {float:left;}
+div.cancelbutton 
+{
+    float: left;
+    margin-left: 10px;
+}
+</style>
+
+<form method="post" id="order_information_form" onsubmit="new Ajax.Updater('getcustomorderstatuslog', '<?php echo $this->getUrl('*/*/getstatuschange') ?>', {asynchronous:true, evalScripts:false, onComplete:function(request, json){}, onLoading:function(request, json){}, parameters:Form.serialize(this)}); return false;">
+     <?php $all_status = array("canceled"=>"Canceled","closed"=>"Closed","complete"=>"Complete","holded"=>"On Hold","pending"=>"Pending","pending_payPal"=>"Pending PayPal","processing"=>"Processing");
+     
+     ?>       
+        <table cellspacing="0" class="form-list form-edit-order">
+        <tbody>
+        <tr>
+            <td class="order_status">
+                <input type="hidden" value="<?php echo  $order_id;?>" name="orderid" />
+                <select class="required-entry required-entry select validation-passed" name="status">
+                    <?php foreach($all_status as $all_statuskey => $all_statusvalues):?>
+                      <option  <?php if($all_statuskey == $model['status']) : echo "selcted";?>  selected="selected" <?php endif;?> value="<?php  echo $all_statuskey; ?>"> <?php  echo $all_statusvalues; ?></option>
+                    <?php endforeach;?>                                        
+                                    </select>
+            </td>
+        </tr>
+        <!-- <tr> <td class="label"><button type="submit" name="submit"><span><span>Save</span></span></button> </td></tr> -->
+                </tbody>
+    </table>
+
+
+
+<div class="buttoncontainer">
+	<div class="savebutton"><button type="submit" name="submit"><span><span>Save</span></span></button></div>
+	
+	<div class="cancelbutton"><button onclick="getcloseaftercancalforstatus();" type="submit" name="Cancel"><span><span>Cancel</span></span></button></div>
+
+</div>
+
+</form>

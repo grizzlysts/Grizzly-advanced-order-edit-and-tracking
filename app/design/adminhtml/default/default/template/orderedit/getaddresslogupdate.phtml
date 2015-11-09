@@ -1,0 +1,41 @@
+
+<?php  
+
+if(isset($_POST['idofaddress']))
+{
+
+ $_POST['getorder_id'];
+    
+$ajax_addressputput = $_POST;
+ 
+//echo Mage::getSingleton('core/session')->addSuccess($message);
+?>
+<div id="messages">
+    <ul class="messages">
+        <li class="success-msg">
+            <ul><li><span><?php echo Mage::helper('sales')->__('The order address has been updated.');?></span></li></ul>
+        </li>
+    </ul>
+   
+</div>
+
+  
+         <address>
+		          <div><?php  $country_name = Mage::getModel('directory/country')->load($ajax_addressputput['country_id'])->getName(); ?></div> 
+                  <div><?php  echo $ajax_addressputput['prefix']."&nbsp;".$ajax_addressputput['firstname']."&nbsp;".$ajax_addressputput['lastname']; ?></div>
+                  <div><?php  echo $ajax_addressputput['company']; ?></div> 
+                  <div><?php  echo $ajax_addressputput['street'] ?></div>
+                  <div><?php echo $ajax_addressputput['city'].",".$ajax_addressputput['postcode'];?></div>
+                  <div><?php  echo $ajax_addressputput['region']; ?> </div>
+                  <div><?php  echo $country_name; ?> </div>
+                  <?php if($ajax_addressputput['telephone'] !=="") {?>
+				  <div><?php  echo "T: ".$ajax_addressputput['telephone']; ?></div>
+                  <?php } ?>
+				  <?php if($ajax_addressputput['fax'] !=="") {?>
+				  <div><?php echo "F: ".$ajax_addressputput['fax']; ?></div>
+				  <?php } ?>
+        </address>
+    
+
+     
+<?php } ?>

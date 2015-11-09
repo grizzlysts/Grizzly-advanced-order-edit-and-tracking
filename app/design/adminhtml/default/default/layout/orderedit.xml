@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+  <adminhtml_sales_order_view>
+    <reference name="order_info">
+      <action method="setTemplate">
+        <template>orderedit/order/view/info.phtml</template>
+      </action>
+    </reference>
+  </adminhtml_sales_order_view>
+  <orderedit_adminhtml_orderedit_index>
+    <reference name="content">
+      <block type="orderedit/adminhtml_orderedit" name="orderedit" />
+    </reference>
+  </orderedit_adminhtml_orderedit_index>
+  <orderedit_adminhtml_orderedit_edit>
+    <reference name="content">
+      <block type="orderedit/adminhtml_ordereditedit" after="orderedit" name="ordereditedit" template="orderedit/ordereditedit.phtml" />
+    </reference>
+  </orderedit_adminhtml_orderedit_edit>
+  <adminhtml_sales_order_view>
+    <reference name="head">
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/jquery.min.js</name>
+      </action>
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/noconflict.js</name>
+      </action>
+      <action method="addCss">
+        <name>orderedit.css</name>
+      </action>
+    </reference>
+    <reference name="order_totals">
+      <action method="setTemplate">
+        <template>orderedit/order/totals.phtml</template>
+      </action>
+    </reference>
+    <reference name="order_history">
+      <action method="setTemplate">
+        <template>sales/order/view/history.phtml</template>
+      </action>
+    </reference>
+  </adminhtml_sales_order_view>
+  <adminhtml_sales_order_getaddressorderlog>
+    <reference name="head">
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/jquery.min.js</name>
+      </action>
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/noconflict.js</name>
+      </action>
+    </reference>
+    <reference name="content">
+      <block type="orderedit/orderaddresscustom" name="root" output="toHtml" template="orderedit/orderaddresscustom.phtml" />
+    </reference>
+  </adminhtml_sales_order_getaddressorderlog>
+  <adminhtml_sales_order_getaddresslogforshipping>
+    <reference name="head">
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/jquery.min.js</name>
+      </action>
+      <action method="addItem">
+        <type>skin_js</type>
+        <name>js/orderlog/noconflict.js</name>
+      </action>
+    </reference>
+    <reference name="content">
+      <block type="orderedit/orderaddresscustom" name="root" output="toHtml" template="orderedit/orderaddressshippingcustom.phtml" />
+    </reference>
+  </adminhtml_sales_order_getaddresslogforshipping>
+  <adminhtml_sales_order_getdataaddress>
+    <reference name="content">
+      <block type="orderedit/getaddresslogupdate" name="root" output="toHtml" template="orderedit/orderaddresscustom.phtml" />
+    </reference>
+  </adminhtml_sales_order_getdataaddress>
+  <adminhtml_sales_order_getdatashippingaddress>
+    <reference name="content">
+      <block type="orderedit/getaddressshippinglogupdate" name="root" output="toHtml" template="orderedit/getaddressshippinglogupdate.phtml" />
+    </reference>
+  </adminhtml_sales_order_getdatashippingaddress>
+  <adminhtml_sales_order_getcustomorderstatuslog>
+    <reference name="content">
+      <block type="orderedit/getcustomorderstatuslog" name="root" output="toHtml" template="orderedit/getcustomorderstatuslog.phtml" />
+    </reference>
+  </adminhtml_sales_order_getcustomorderstatuslog>
+  <adminhtml_sales_order_getcustomerchange>
+    <reference name="content">
+      <block type="orderedit/getcustomerchangeg" name="root" output="toHtml" template="orderedit/getcustomerchange.phtml" />
+    </reference>
+  </adminhtml_sales_order_getcustomerchange>
+</layout>

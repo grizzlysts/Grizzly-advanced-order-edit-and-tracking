@@ -1,0 +1,200 @@
+<?php
+$addressId = $_POST['address_id'];
+$address    = Mage::getModel('sales/order_address')->load($addressId);
+$countryName = Mage::getModel('directory/country')->load($address['country_id'])->getName();
+$countryCode = $address->getCountry();
+?> 
+
+<form method="post" id="address_edit_form_custom_form" onsubmit="new Ajax.Updater('newcustomaddressshippngajax', '<?php echo $this->getUrl('*/*/getdatashippingaddress') ?>', {asynchronous:true, evalScripts:false, onComplete:function(request, json){}, onLoading:function(request, json){}, parameters:Form.serialize(this)}); return false;" method="post"
+>
+<input type="hidden" value="<?php  echo $address['entity_id']?>" name="idofaddress" />
+<div>
+        <ul class="messages">
+            <li class="notice-msg">These changes will apply only to this order address (not customer).<br>
+                Changing address information will not recalculate shipping, tax or other order amount.
+            </li>
+        </ul>
+    </div>
+<input type="hidden" name="getorder_id" value="<?php echo $address['parent_id'];?>" />
+<input type="hidden" name="getorder_status" value="<?php echo $_POST['status'];?>" />
+<input type="hidden" name="getshippingaddresscomment_status" value="getshippingaddresscomment_status" />	
+    <table cellspacing="0" class="form-list form-edit-order">
+        <tbody>
+                    <tr>
+                <td class="label">
+                    <label for="prefix_146">
+                        Prefix                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="prefix" value="" class="input-text " id="prefix_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="firstname_146">
+                        First name                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="firstname" value="<?php echo $address['firstname']; ?>" class="input-text required-entry" id="firstname_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="middlename_146">
+                        Middle Name/Initial                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="middlename" value="<?php echo $address['middlename']; ?>" class="input-text " id="middlename_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="lastname_146">
+                        Last name                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="lastname" value="<?php echo $address['lastname']; ?>" class="input-text required-entry" id="lastname_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="suffix_146">
+                        Suffix                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="suffix" value="<?php echo $address['suffix']; ?>" class="input-text " id="suffix_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="company_146">
+                        Company                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="company" value="<?php echo $address['company']; ?>" class="input-text " id="company_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="street_146">
+                        Street Address                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="street" value="<?php echo $address['street']; ?>" class="input-text required-entry" id="street_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="city_146">
+                        City                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="city" value="<?php echo $address['city']; ?>" class="input-text required-entry" id="city_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="region_146">
+                        State/Province                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                
+                     
+    <input type="text"  class="input-text" value="" name="region" id="region">
+
+
+
+
+             </td>
+
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="country_146">
+                        Country                        <span class="required">*</span>                    </label>
+                </td>
+<td class="value">
+<?php
+
+ $countryCollection = $this->getCountryCollection();
+//echo '<pre>';print_r( $countryCollection->getData());
+?>
+<select name='country_id' id='country_id' class="validate-select">
+    <?php
+        foreach($countryCollection as $country) {
+            ?>
+            <?php if($country['value'] ==$countryCode)
+                {
+                    $selected_option = 'selected';
+                }
+                else
+                {
+                    $selected_option ='';
+
+                }
+                ?>
+                    <option <?php echo $selected_option; ?> value="<?php echo $country['value'];?>" ><?php echo $country['label'] ?></option>
+            <?php
+        }
+    ?>
+</select>
+                               </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="postcode_146">
+                        Zip/Postal Code                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="postcode" value="<?php echo $address['postcode']; ?>" class="input-text required-entry" id="postcode_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="telephone_146">
+                        Telephone                        <span class="required">*</span>                    </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="telephone" value="<?php echo $address['telephone']; ?>" class="input-text required-entry" id="telephone_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="fax_146">
+                        Fax                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="fax" value="<?php echo $address['fax']; ?>" class="input-text " id="fax_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="email_146">
+                        E-mail                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="email" value="<?php echo $address['email']; ?>" class="input-text validate-email" id="email_146">
+                                    </td>
+            </tr>
+                    <tr>
+                <td class="label">
+                    <label for="vat_id_146">
+                        VAT number                                            </label>
+                </td>
+                <td class="value">
+                                            <input type="text" name="vat_id" value="<?php echo $address['vat_id']; ?>" class="input-text " id="vat_id_146">
+                                    </td>
+            </tr>
+                </tbody>
+    </table>
+
+
+<input class="form-button" id="" type="submit" value="Update"  />
+<input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+<!--<button class="scalable save" style="" onclick="submitAndReloadArea($('address_edit_form_custom_form').parentNode, '<?php echo $this->getUrl('*/*/getdataaddress')?>')" type="button">
+            <span>Update</span>
+         </button>-->
+
+</form>
+
+<input class="form-button" type="submit" value="Cancel" onclick="getcloseaftercancalforshipping();" style="float:right;"/>

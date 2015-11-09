@@ -1,0 +1,147 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Grizzly_Orderedit>
+            <version>0.1.0</version>
+        </Grizzly_Orderedit>
+    </modules>
+    <frontend>
+        <routers>
+            <orderedit>
+                <use>standard</use>
+                <args>
+                    <module>Grizzly_Orderedit</module>
+                    <frontName>orderedit</frontName>
+                </args>
+            </orderedit>
+        </routers>
+        <layout>
+            <updates>
+                <orderedit>
+                    <file>orderedit.xml</file>
+                </orderedit>
+            </updates>
+        </layout>
+    </frontend>
+       
+    <admin>
+        <routers>
+			<orderedit>
+				<use>admin</use>
+				<args>
+					<module>Grizzly_Orderedit</module>
+					<frontName>orderedit</frontName>
+				</args>
+			</orderedit>
+                        
+                        <adminhtml>
+                            <args>
+                             <modules>
+                                <Grizzly_Orderedit before="Mage_Adminhtml">Grizzly_Orderedit_Adminhtml</Grizzly_Orderedit>
+                             </modules>
+                            </args>
+                        </adminhtml>    
+        </routers>
+    </admin>
+    <adminhtml>
+
+		<acl>
+			<resources>
+				<all>
+					<title>Allow Everything</title>
+				</all>
+				<admin>
+					<children>
+						<Grizzly_Orderedit>
+							<title>Orderlog</title>
+							<sort_order>10</sort_order>
+						</Grizzly_Orderedit>
+					</children>
+				</admin>
+			</resources>
+		</acl>
+		<layout>
+			<updates>
+				<orderedit>
+					<file>orderedit.xml</file>
+				</orderedit>
+			</updates>
+		</layout>
+                
+       <!--<events>
+	  <adminhtml_sales_order_create_process_data> 
+        <observers>
+          <orderedit_Model_Observer> 
+            <type>singleton</type> 
+            <class>orderedit/observer</class> 
+            <method>getOrderprocessing</method> 
+            <args></args> 
+          </orderedit_Model_Observer>
+        </observers>
+      </adminhtml_sales_order_create_process_data>
+    </events>-->
+    </adminhtml>   
+    <global>
+        	<rewrite>        
+            <orderlog_orderedit_adminhtml_sales_order_editcontroller>
+                <from><![CDATA[#^/admin/sales_order_edit/#]]></from> <!-- Mage_Adminhtml_Sales_Order_EditController  -->
+                <to>/orderedit/adminhtml_sales_order_edit/</to> <!-- Orderoveride_Orderoveride_Adminhtml_Sales_Order_EditController  -->
+            </orderlog_orderedit_adminhtml_sales_order_editcontroller>
+		</rewrite>
+   
+   
+        <models>
+            <orderedit>
+                <class>Grizzly_Orderedit_Model</class>
+                <resourceModel>orderedit_mysql4</resourceModel>
+            </orderedit>
+            <orderedit_mysql4>
+                <class>Grizzly_Orderedit_Model_Mysql4</class>
+                <entities>
+                    <orderedit>
+                        <table>orderedit</table>
+                    </orderedit>
+                </entities>
+            </orderedit_mysql4>
+            
+            <sales>
+             <rewrite>
+                 <order>Grizzly_Orderedit_Model_Sales_Order</order>
+             </rewrite>    
+            </sales>
+        </models>
+        <resources>
+            <orderedit_setup>
+                <setup>
+                    <module>Grizzly_Orderedit</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </orderedit_setup>
+            <orderedit_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </orderedit_write>
+            <orderedit_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </orderedit_read>
+        </resources>
+        <blocks>
+            <orderedit>
+                <class>Grizzly_Orderedit_Block</class>
+            </orderedit>
+        </blocks>
+
+        
+        <helpers>
+            <orderedit>
+                <class>Grizzly_Orderedit_Helper</class>
+            </orderedit>
+        </helpers>
+
+    </global>
+</config>

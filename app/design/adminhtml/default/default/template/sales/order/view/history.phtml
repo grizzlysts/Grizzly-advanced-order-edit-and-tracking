@@ -1,0 +1,188 @@
+
+<div id="order_history_block">
+<?php if ($this->canAddComment()):?>
+<div id="history_form" class="order-history-form">
+<div><?php echo Mage::helper('sales')->__('Add Order Comments') ?></div>
+<span class="field-row">
+<label class="normal" for="history_status"><?php echo Mage::helper('sales')->__('Status') ?></label><br/>
+<select name="history[status]" class="select" id="history_status">
+<?php foreach ($this->getStatuses() as $_code=>$_label): ?>
+<option value="<?php echo $_code ?>"<?php if($_code==$this->getOrder()->getStatus()): ?> selected="selected"<?php endif; ?>><?php echo $_label ?></option>
+<?php endforeach; ?>
+</select>
+</span>
+<span class="field-row">
+<label class="normal" for="history_comment"><?php echo Mage::helper('sales')->__('Comment') ?></label>
+<textarea name="history[comment]" rows="3" cols="5" id="history_comment"></textarea>
+</span>
+<div class="f-left">
+<?php if ($this->canSendCommentEmail()): ?>
+<input name="history[is_customer_notified]" type="checkbox" id="history_notify" value="1" /><label class="normal" for="history_notify"> <?php echo Mage::helper('sales')->__('Notify Customer by Email') ?></label><br />
+<?php endif; ?>
+<input name="history[is_visible_on_front]" type="checkbox" id="history_visible" value="1" /><label class="normal" for="history_visible"> <?php echo Mage::helper('sales')->__('Visible on Frontend') ?></label>
+</div>
+<div class="f-right">
+<?php echo $this->getChildHtml('submit_button') ?>
+</div>
+<div class="clear"></div>
+</div>
+<div class="divider"></div>
+<?php endif;?>
+<ul class="note-list">
+<?php //echo  '<pre>';
+$getbilling_address_data = $this->getOrder()->getBillingAddress();
+
+
+
+$order = Mage::getModel("sales/order")->load($this->getOrder()->getEntityId()); 
+
+$shipping_address = $order->getShippingAddress();
+
+//echo '<pre>';print_r($shipping_address->getData());
+
+$countryName = Mage::getModel('directory/country')->load($getbilling_address_data['country_id'])->getName(); //get country name from country code   current country name
+
+
+
+$getbilling_address = array($getbilling_address_data['prefix'],$getbilling_address_data['firstname'],$getbilling_address_data['lastname'],$getbilling_address_data['company']
+,$getbilling_address_data['street'],$getbilling_address_data['city'],$getbilling_address_data['postcode'],$getbilling_address_data['region']
+,$countryName,$getbilling_address_data['telephone'],$getbilling_address_data['fax'],'getbillingaddresscomment_status');
+
+
+
+//for shipping address
+
+$getshipping_address = array($shipping_address['prefix'],$shipping_address['firstname'],$shipping_address['lastname'],$shipping_address['company']
+,$shipping_address['street'],$shipping_address['city'],$shipping_address['postcode'],$shipping_address['region']
+,$countryName,$shipping_address['telephone'],$shipping_address['fax'],'getshippingaddresscomment_status');
+
+
+//$getbilling_array = array_filter($getbilling_address); 
+$commentpart1 = array();
+$commentpart2 = array();
+$commentpart3 = array();
+
+//echo '<pre>';print_r($getshipping_address );
+
+
+$model_comment_array = array();
+
+$query =  "SELECT comment,entity_id FROM sales_flat_order_status_history where parent_id =".$this->getOrder()->getEntityId()." &&  comment like '%getbillingaddresscomment_status' ORDER BY created_at DESC";
+
+$connection = Mage::getSingleton("core/resource")->getConnection("core/read");
+
+$model_comment = $connection->fetchall($query);
+
+foreach($model_comment as $model_comment_val)
+{
+    
+   $model_comment_array[] = $model_comment_val['comment'];
+}
+
+
+$model_comment_array_s = array();
+
+$query_S =  "SELECT comment,entity_id FROM sales_flat_order_status_history where parent_id =".$this->getOrder()->getEntityId()." &&  comment like '%getshippingaddresscomment_status' ORDER BY created_at DESC";
+
+$connection_S = Mage::getSingleton("core/resource")->getConnection("core/read");
+
+$model_comment_S = $connection_S->fetchall($query_S);
+
+foreach($model_comment_S as $model_comment_val_S)
+{
+    
+   $model_comment_array_S[] = $model_comment_val_S['comment'];
+}
+
+//$billing_fields = array_diff(explode(",",$model_comment_array['0']),explode(",",$model_comment_array['1']));
+ 
+//$model_comment = Mage::getModel("sales/order")->getCollection();
+        //->addAttributeToSelect("comment")
+            //->addFieldToFilter(
+                              //  array('comment'),
+                              //  array(
+                                 //   array('like'=>'%getbillingaddresscomment_status')
+                               // )
+                           // );
+						   //echo count($this->getOrder()->getStatusHistoryCollection(true));
+ //echo '<pre>';print_r($model_comment_array_S);      
+?>
+<?php $i=0;foreach ($this->getOrder()->getStatusHistoryCollection(true) as $_item):?>
+    
+
+<?php  
+
+$commentpart = explode(",",$_item['comment']); //get the array value from controller action
+
+?>
+<li>
+<strong><?php echo $this->helper('core')->formatDate($_item->getCreatedAtDate(), 'medium') ?></strong>
+<?php  
+$user = Mage::getSingleton('admin/session');  //get admin information
+$userUsername = $user->getUser()->getUsername(); //get username  of admin user
+?>      
+<?php echo $this->helper('core')->formatTime($_item->getCreatedAtDate(), 'medium') ?><span class="separator">|</span><strong><?php echo $_item->getStatusLabel() ?></strong><br/>
+
+<small><?php echo $this->helper('sales')->__('Admin User: ') ?><strong class="subdue"><span class="adminusrname" ><?php echo  $userUsername;   ?></span></strong></small>
+<br>
+<small>
+<?php echo $this->helper('sales')->__('Customer') ?>
+<strong class="subdue">
+<?php if ($this->isCustomerNotificationNotApplicable($_item)): ?>
+<?php echo $this->helper('sales')->__('Notification Not Applicable') ?>
+<?php elseif ($_item->getIsCustomerNotified()): ?>
+<?php echo $this->helper('sales')->__('Notified') ?>
+<img src="<?php echo $this->getSkinUrl('images/ico_success.gif') ?>" width="16" height="16" alt="" />
+<?php else: ?>
+<?php echo $this->helper('sales')->__('Not Notified') ?>
+<?php endif; ?>
+</strong></small>
+<?php if ($_item->getComment()): ?>
+<?php if(in_array('getbillingaddresscomment_status',$commentpart)) { ?>
+<?php  array_pop($commentpart);?>
+<address><font class="billingadd"> <?php echo "Billing Address :"?></font>
+<?php
+ // echo '<pre>';print_r($model_comment_array[$i]);
+ 
+  //echo '<pre>';print_r($model_comment_array[$i+1]);
+
+if(count($commentpart ) == 0 ){
+  echo "<address>"."No Logged"."</address>";
+  }
+//echo '<pre>';print_r($billing_fields);
+
+//$log_address = array_diff($getbilling_address,$log_commentligging); 
+//echo '<pre>';print_r($log_commentligging);
+foreach($commentpart as $billing_diffval) {
+     
+  ?>
+<address><?php  echo $billing_diffval; ?></address>
+<?php } ?> 
+</address>
+<?php } elseif(in_array('getshippingaddresscomment_status',$commentpart)) { 
+?>
+<?php  array_pop($commentpart);?>
+<address> <font class="shippingadd"><?php echo "Shipping Address :"?></font>
+<?php
+
+if(count($commentpart) == 0 ){
+  echo "<address>"."No Logged"."</address>";
+  }
+  
+foreach($commentpart as $billing_diffval_s) {?>
+<address><?php  echo $billing_diffval_s; ?></address>
+<?php } ?> 
+</address>
+<?php  } else { ?>
+<br/>
+<?php echo $this->escapeHtml($_item->getComment(), array('b','br','strong','i','u')) ?>
+<?php } ?>
+<?php endif; ?>
+</li>
+<?php  $i++; endforeach; ?>
+</ul>
+<script type="text/javascript">
+// if($('order_status'))$('order_status').update('<?php echo $this->getOrder()->getStatusLabel() ?>');
+</script>
+</div>
+
